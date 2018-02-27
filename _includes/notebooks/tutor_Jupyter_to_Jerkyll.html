@@ -1,0 +1,201 @@
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="http://jupyter.org">Jupiter notebook</a> is great for coding and documenting simultaneously. For future reference or for publishing, it will be great if we can convert some of our notebooks to blogs. As I blogged in <a href="https://jekyllrb.com">jekyll</a> for sometime, I want to find a pipeline to convert jupiter notebook to jekyll blog. Here are some notes that hopefully would be usefull for someone.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Outline</strong></p>
+<ol>
+<li><a href="#install_dependencies">Install dependencies</a></li>
+<li><a href="#initiate_jekyll_site">Initiate jekyll site</a></li>
+<li><a href="#nb_to_jekyll">Convert notebook to jekyll post</a></li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Install-dependencies-">1. Install dependencies <a id="install_dependencies" /><a class="anchor-link" href="#1.-Install-dependencies-">&#182;</a></h2><ul>
+<li>You may need to install ruby: 
+<pre><code>brew install ruby</code></pre>
+</li>
+<li>Install jerkyll:  
+<pre><code>gem install jekyll bundler</code></pre>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Initiate-a-jekyll-site-">2. Initiate a jekyll site <a id="initiate_jekyll_site" /><a class="anchor-link" href="#2.-Initiate-a-jekyll-site-">&#182;</a></h2><ul>
+<li>Initiate a jekyll site <strong> jupyterNotes</strong>  
+<pre><code>jekyll new jupyterNotes</code></pre>
+</li>
+<li>Check initiated site  
+<pre><code>cd jupiterNotes  
+tree</code></pre>
+we supose to see something like this:<br>
+<img src="tutor_Jupyter_to_Jerkyll/assets/images/jekyll_init_site_tree.png" alt="img_jekyll_init_tree"></li>
+</ul>
+<ul>
+<li>Create an (<strong>_includes</strong>) folder to hold future images, CSS and JS files.  
+<pre><code>mkdir  _includes</code></pre>
+<em>notes</em>: To see tree like this, you may need to install (<strong>tree</strong>)<br>
+<code>brew install tree</code></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Convert-notebook-to-jekyll-post-">3. Convert notebook to jekyll post <a id="nb_to_jekyll" /><a class="anchor-link" href="#3.-Convert-notebook-to-jekyll-post-">&#182;</a></h2><ul>
+<li><strong>3.1</strong> I tried convert notebook to (<strong>.md</strong>) file and then copy the data to a jekyll head template post. This worked, but there were too many display error. Seems that that can be optimized/corrected using a <a href="https://github.com/jsoma/nb2jekyll">template</a> as discussed in the post <a href="http://rjbaxley.com/posts/2017/02/25/Jekyll_Blogging_with_Notebooks.html">below</a>.<blockquote><ul>
+<li>Save the <strong>nb</strong> as <strong>.md</strong> format: <strong>File&gt;Download as&gt;Markdown(.md)</strong>  </li>
+<li>Alternative, using command line: 
+<pre><code>nbconvert --to markdown /path/to/your_notebook.ipynb</code></pre>
+</li>
+<li>In Jekyll folder <strong> jupyterNotes</strong>, go to <strong>_post</strong>, create a <strong>.md</strong> post with format <strong>YYYY-MM-DD-Your-post-title.md</strong>: 
+<pre><code>touch YYYY-MM-DD-Your-post-title.md</code></pre>
+</li>
+<li>Fill the head template of YYYY-MM-DD-Your-post-title.md follow the following pattern. This is compulsory to allow jekyll to create the post.  
+<pre><code>---
+layout: post
+title:  "Markdown in Jupyter Notebook"
+date:   2018-02-09 16:30:16 +0100
+categories: tips_and_tricks
+---</code></pre>
+</li>
+<li>Copy content of converted <strong>your_notebook.md</strong> to the end of your newly created <strong>YYYY-MM-DD-Your-post-title.md</strong>  </li>
+<li>Update your (local) site with new post by going to <strong>jupyterNotes</strong> and run:
+<pre><code>jekyll serve</code></pre>
+</li>
+<li>You should see your <strong>nb</strong> in the webbrowser at <code>http://127.0.0.1:4000/</code>. There should be few error in display that you can correct by following the <a href="http://rjbaxley.com/posts/2017/02/25/Jekyll_Blogging_with_Notebooks.html">tutor</a>.</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p><strong>3.2</strong> I found a more straight forward way is convert <strong>nb</strong> into <strong>.html</strong> file and include in <strong>YYYY-MM-DD-Your-post-title.md</strong>. Most advantage is you can visualize you post in <strong>.html</strong> file before add it into jekyll. If there are any error during writing markdown in <strong>nb</strong>, it should appear in <strong>.html</strong> file and you should correct it.</p>
+<blockquote><ul>
+<li>Copy your <strong>.html</strong> into <strong>jupyterNotes/_includes</strong>  </li>
+<li>To include <strong>.html</strong> into your post: {%% include tutor_Markdown_jupyterNotebook.html %} </li>
+<li><em>Note</em>: if for whatever reason, you want to include your file from other folder than <strong>_includes</strong>, you will need to modify the <strong>_config.yml</strong>, add the following:  
+<pre><code>includes_dir: your_folder</code></pre>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p><strong>3.3</strong> If you want to save images seperate from <strong><code>.html</code></strong> file and replace intergrated image of base64 by URL to the saved images, then follow the steps bellow:</p>
+<blockquote><ul>
+<li>Copy <strong><code>nbconvert_config.py</code></strong> and <strong><code>jekyll.tpl</code></strong> from <a href="https://gist.github.com/mprat/a843b08e315621d91a667124a243abeb">this git</a> to your <strong><code>jupyterNotes</code></strong>  </li>
+<li>Save <strong><code>.html</code></strong> notebook to <strong><code>jupyterNotes</code></strong></li>
+<li>In your terminal, move to <strong><code>jupyterNotes</code></strong> folder and execute:  
+<pre><code>jupyter nbconvert --config nbconvert_config.py your_notebook.ipynb</code></pre>
+</li>
+<li>Note that original <strong><code>nbconvert_config.py</code></strong> re-execute the notebook. If your notebook is like mine,  time-consuming to run, delete line 26 <code>'nbconvert.preprocessors.ExecutePreprocessor'</code>.  </li>
+<li>Your images will be saved into <strong><code>assets/imgs/your_notebook/</code></strong> and the converted <strong><code>.html</code></strong> will be saved into <strong><code>_includes/notebook</code></strong> </li>
+<li>I personally find this solution give not good apperance in final post compare to a simple saving into <strong><code>.html</code></strong> as mentioned earlier in <strong>3.2</strong>.  </li>
+</ul>
+</blockquote>
+</li>
+<li><p><strong>3.4</strong> Some notes:</p>
+<blockquote><ul>
+<li>If you linked images with absolute path in your notebook, e.g. <a href="path_to_your_image">your_img</a>, your saved <strong><code>.html</code></strong> will not display correctly when you move to another computer or on the web. You need to modify the path in saved <strong><code>.html</code></strong> as following: 
+<pre><code>[original]: &lt;img src="path_to_img_folder/your_image.png" alt="your_image" /&gt;
+[modified]: &lt;img src="../../../../assets/images/your_notebook/your_image.png" alt="your_image" /&gt;</code></pre>
+</li>
+<li>You may notice <strong><code>../../../../</code></strong> this is correspond to the folder archive in the <strong><code>_site</code></strong> folder. As your jekyll <strong><code>.html</code></strong> post <em>(not the html immediatedly saved from your notebook)</em> will be saved into <strong><code>_site/category/year/month/day</code></strong> so you need to go back this to go to <strong><code>/assets/</code></strong> which locate inside <strong><code>_site</code></strong>. </li>
+</ul>
+</blockquote>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="CSS">CSS<a class="anchor-link" href="#CSS">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">html</span>
+&lt;style&gt;
+img[alt=img_jekyll_init_tree] { width: 200px}
+&lt;/style&gt;
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[1]:</div>
+
+
+<div class="output_html rendered_html output_subarea ">
+<style>
+img[alt=img_jekyll_init_tree] { width: 200px}
+</style>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="References">References<a class="anchor-link" href="#References">&#182;</a></h2><ol>
+<li><a href="https://linode.com/docs/applications/project-management/jupyter-nobook-on-jekyll/">Nice tutor to install jekyll and export jupyter to jekyll</a>  </li>
+<li><a href="http://rjbaxley.com/posts/2017/02/25/Jekyll_Blogging_with_Notebooks.html">Using template for nbconvert to md file with base64 image</a>  <a href="https://github.com/gte620v/gte620v.github.io/blob/master/_nb2jekyll/nb2jekyll/templates/jekyll.tpl">  <strong><code>(git)</code></strong></a></li>
+<li><a href="http://www.mprat.org/blog/2017/03/18/blogging-with-jupyter.html">Nice tutor export notebook to html and include in jekyll md-post</a></li>
+<li><a href="https://nbconvert.readthedocs.io/en/latest/">Document of <strong>nbconvert</strong></a></li>
+<li><a href="http://www.leeclemmer.com/2017/07/04/how-to-publish-jupyter-notebooks-to-your-jekyll-static-website.html">Using template for nbconvert with seperate image folder</a></li>
+</ol>
+
+</div>
+</div>
+</div>
+ 
+
